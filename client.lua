@@ -460,3 +460,48 @@ AddEventHandler('disablegodveh', function()
 	SetEntityInvincible(pedveh, false)
 	SetDisableVehicleWindowCollisions(pedveh, false)
 end)
+
+RegisterCommand('licenseplate', function(source, args, rawCommand)
+    local ped = PlayerPedId()
+    local licenseplate = args[1]
+    if licenseplate ~= nil then
+    	local veh = GetVehiclePedIsIn(ped)
+    	if veh ~= 0 then
+            local driver = GetPedInVehicleSeat(veh, -1)
+
+            if driver == ped then 
+    		SetVehicleNumberPlateText(veh, licenseplate)
+            end
+        end
+    end
+end)
+
+-- repair vehicle ped is in
+RegisterCommand('repair', function(source, args, rawCommand)
+    local ped = PlayerPedId()
+    local veh = GetVehiclePedIsIn(ped)
+    if veh ~= 0 then
+        local driver = GetPedInVehicleSeat(veh, -1)
+
+        if driver == ped then 
+            SetVehicleFixed(veh)
+        end
+    end
+end)
+
+-- SetSuperJumpThisFrame
+RegisterCommand('superjump', function(source, args, rawCommand)
+    local ped = PlayerId()
+    -- if jump is not defined, then define it else remove it
+    if jump then
+        jump = false
+    else
+        jump = true
+    end
+    Citizen.CreateThread(function()
+        while jump do
+            Citizen.Wait(0)
+            SetSuperJumpThisFrame(ped)
+        end
+    end)
+end)
